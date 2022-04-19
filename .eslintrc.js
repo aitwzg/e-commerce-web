@@ -13,8 +13,13 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'space-before-function-paren': 0,
-    'comma-dangle': 0
+    'comma-dangle': 0, // 逗号
+    indent: ['off', 2], // 缩进
+    'eol-last': 0,
+    'space-before-function-paren': 0, // 函数名和括号之间的空格
+    'space-in-parens': 0,
+    'func-call-spacing': 0,
+    'vue/multi-word-component-names': 0,
 
   }
 }
