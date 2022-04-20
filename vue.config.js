@@ -7,7 +7,7 @@ module.exports = {
       preProcessor: 'less',
       patterns: [
         path.join(__dirname, './src/assets/styles/variables.less'),
-        path.join(__dirname, './src/assets/styles/variables.less'),
+        path.join(__dirname, './src/assets/styles/mixins.less'),
       ]
     }
   }
