@@ -8,5 +8,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="less">
+.container{
+  .hoverShadow();
+  color:@xtxColor
+}
 </style>
