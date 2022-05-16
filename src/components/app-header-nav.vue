@@ -52,6 +52,7 @@ export default {
   display: flex;
   justify-content: space-around;
   padding-left: 40px;
+  z-index: 999;
   > li {
     margin-right: 40px;
     width: 38px;
