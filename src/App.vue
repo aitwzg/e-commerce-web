@@ -1,17 +1,25 @@
 <template>
-<RouterView></RouterView>
+  <button @click="fn">按钮</button>
+  <button @click="mufn">修改token</button>
+  <RouterView></RouterView>
 </template>
 
 <script>
 import request from '@/utils/request'
+import store from '@/store'
 
 export default {
   name: 'App',
   setup() {
     const fn = () => {
-      request('/member/profile', 'post', { a: 10 })
+      request('/member/profile', 'get', { a: 10 })
     }
-    return { fn }
+    const mufn = () => {
+      store.commit('user/setUser', {
+        token: 'zhangs',
+      })
+    }
+    return { fn, mufn }
   },
 }
 </script>

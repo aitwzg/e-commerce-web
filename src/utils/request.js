@@ -11,6 +11,7 @@ const instance = axios.create({
 })
 
 instance.interceptors.request.use(config => {
+    // config 是默认参数
     // 解构写法
     const { profile } = store.state.user
     // 判断是否有token
@@ -32,7 +33,7 @@ instance.interceptors.response.use(res => res.data, err => {
         // 跳转登录信息 $route.path === /user $route.fullPath ===/user?a=10
         // router.currentRoute 是响应式ref数据要加value,router.currentRoute.value.fullPath
         const fullPath = encodeURIComponent(router.currentRoute.value.fullPath)
-        router.push('/login?redirectURL' + fullPath)
+        router.push('/login?redirectUrl' + fullPath)
     }
     return Promise.reject(err)
 })
