@@ -1,8 +1,8 @@
 <template>
-  <div class="home-category" @mouseleave="categoryId=null">
+  <div class="home-category" @mouseleave="categoryId = null">
     <ul class="menu">
       <li
-        :class="{active:categoryId===item.id}"
+        :class="{ active: categoryId === item.id }"
         v-for="item in menuList"
         :key="item.id"
         @mouseenter="categoryId = item.id"
@@ -16,6 +16,21 @@
           >
             {{ sub.name }}
           </RouterLink>
+        </template>
+        <template v-else>
+          <XtxSkeleton
+            height="18px"
+            width="60px"
+            bg="rgba(255,255,255,.2)"
+            style="margin-right: 5px"
+            animated
+          ></XtxSkeleton>
+          <XtxSkeleton
+            height="18px"
+            bg="rgba(255,255,255,.2)"
+            width="60px"
+            animated
+          ></XtxSkeleton>
         </template>
       </li>
     </ul>
@@ -110,7 +125,8 @@ export default {
       padding-left: 40px;
       height: 50px;
       line-height: 50px;
-      &:hover {
+      &:hover,
+      &.active {
         background: @xtxColor;
       }
       a {
@@ -212,6 +228,17 @@ export default {
     .layer {
       display: block;
     }
+  }
+}
+.xtx-skeleton {
+  animation: fade 1s linear infinite alternate;
+}
+@keyframes fade {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
   }
 }
 </style>

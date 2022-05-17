@@ -3,11 +3,13 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+// UI组件库
+import UI from '@/components/library'
 // 重置的样式库
 import 'normalize.css'
 
 import '@/assets/styles/common.less'
 
 // 自己的公共样式
-
-createApp(App).use(store).use(router).mount('#app')
+// 全局使用
+createApp(App).use(store).use(router).use(UI).mount('#app')
