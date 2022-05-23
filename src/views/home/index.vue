@@ -70,4 +70,13 @@ export default {
 .h-enter-to {
   height: 100px;
 }
+.h-leave-from {
+  height: 100px;
+}
+.h-leave-active {
+  transition: all 2s;
+}
+.h-leave-to {
+  height: 0px;
+}
 </style>
