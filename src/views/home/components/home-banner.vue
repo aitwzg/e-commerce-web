@@ -1,6 +1,6 @@
 <template>
   <div class="home-banner">
-    <XtxCarousel autoPlay :sliders="sliders"> </XtxCarousel>
+    <XtxCarousel autoPlay :sliders="sliders"></XtxCarousel>
   </div>
 </template>
 
