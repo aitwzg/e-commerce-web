@@ -1,43 +1,49 @@
 <template>
-  <div class="home-product">
-    <HomePanel title="生鲜" v-for="i in 4" :key="i">
-      <template v-slot:right>
-        <div class="sub">
-          <RouterLink to="/">海鲜</RouterLink>
-          <RouterLink to="/">水果</RouterLink>
-          <RouterLink to="/">蔬菜</RouterLink>
-          <RouterLink to="/">水产</RouterLink>
-          <RouterLink to="/">禽肉</RouterLink>
+  <Transition ref="target" name="fade">
+    <div class="home-product" v-if="list.length">
+      <HomePanel :title="cate.name" v-for="cate in list" :key="cate.id">
+        <template #right>
+          <div class="sub">
+            <RouterLink v-for="sub in cate.children" :key="sub.id" to="/">{{
+              sub.name
+            }}</RouterLink>
+          </div>
+          <XtxMore></XtxMore>
+        </template>
+        <div class="box">
+          <RouterLink class="cover" to="/">
+            <img v-lazy="cate.picture" alt="" />
+            <strong class="label">
+              <span>{{ cate.name }}馆</span>
+              <span>{{ cate.saleInfo }}</span>
+            </strong>
+          </RouterLink>
+          <ul class="goods-list">
+            <li v-for="item in cate.goods" :key="item.id">
+              <HomeGoods :goods="item" />
+            </li>
+          </ul>
         </div>
-        <XtxMore />
-      </template>
-      <div class="box">
-        <RouterLink class="cover" to="/">
-          <img
-            src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/fresh_goods_cover.jpg"
-            alt=""
-          />
-          <strong class="label">
-            <span>生鲜馆</span>
-            <span>全场3件7折</span>
-          </strong>
-        </RouterLink>
-        <ul class="goods-list">
-          <li v-for="i in 8" :key="i">
-            <HomeGoods />
-          </li>
-        </ul>
-      </div>
-    </HomePanel>
-  </div>
+      </HomePanel>
+    </div>
+    <ProductSkeleton v-else></ProductSkeleton>
+  </Transition>
+  <!-- <ProductSkeleton></ProductSkeleton> -->
 </template>
 
 <script>
 import HomePanel from './home-panel'
 import HomeGoods from './home-goods'
+import { findGoods } from '@/api/home'
+import { useLazyData } from '@/hooks'
+import ProductSkeleton from './product-skeleton.vue'
 export default {
   name: 'HomeProduct',
-  components: { HomePanel, HomeGoods },
+  components: { HomePanel, HomeGoods, ProductSkeleton },
+  setup() {
+    const { target, result } = useLazyData(findGoods)
+    return { target, list: result }
+  },
 }
 </script>
 
@@ -67,9 +73,13 @@ export default {
       height: 610px;
       margin-right: 10px;
       position: relative;
+      overflow: hidden;
+
       img {
         width: 100%;
         height: 100%;
+        // 裁切填充图片
+        object-fit: cover;
       }
       .label {
         width: 188px;
@@ -112,6 +122,42 @@ export default {
           margin-right: 0;
         }
       }
+    }
+  }
+}
+
+.goods-item {
+  width: 240px;
+  height: 300px;
+  padding: 10px 30px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+  transition: all 0.5s;
+  .image {
+    display: block;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  p {
+    margin-top: 6px;
+    font-size: 16px;
+    &.name {
+      height: 44px;
+    }
+    &.desc {
+      color: #666;
+      height: 22px;
+    }
+    &.price {
+      margin-top: 10px;
+      font-size: 20px;
+      color: @priceColor;
     }
   }
 }

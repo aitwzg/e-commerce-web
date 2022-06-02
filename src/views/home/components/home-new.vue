@@ -36,6 +36,7 @@ export default {
   },
   setup() {
     const { target, result } = useLazyData(findNew)
+
     return { target, goods: result }
   },
 }

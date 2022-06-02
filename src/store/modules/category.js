@@ -31,11 +31,11 @@ export default {
         async getList(context) {
             // 获取分类数据
             const data = await findAllCategory()
-            console.log(data)
+            // console.log(data)
             data.result.forEach(top => {
                 top.open = false
             })
-            console.log(data)
+            // console.log(data)
 
             // 添加数据
             context.commit('setList', data.result)
