@@ -119,3 +119,37 @@ ul {
     }
   }
 }
+
+.fade-right {
+  &-leave {
+    &-from {
+      opacity: 1;
+      transform: none;
+    }
+
+    &-active {
+      transition: all .5s;
+    }
+
+    &-to {
+      opacity: 0;
+      transform: translate3d(20px, 0, 0);
+    }
+  }
+
+  &-enter {
+    &-from {
+      opacity: 0;
+      transform: translate3d(20px, 0, 0);
+    }
+
+    &-active {
+      transition: all .5s;
+    }
+
+    &-to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

@@ -3,7 +3,7 @@ import store from '@/store'
 import router from '@/router'
 
 // 其他地方不用axios需要用基准地址
-export const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
+export const baseURL = 'https://apipc-xiaotuxian-front.itheima.net/'
 
 const instance = axios.create({
     baseURL,
@@ -17,7 +17,7 @@ instance.interceptors.request.use(config => {
     // 判断是否有token
     if (profile.token) {
         // 设置token
-        config.headers.Authorization = `Bearer${profile.token}`
+        config.headers.Authorization = `Bearer ${profile.token}`
     }
     return config
 }, err => {

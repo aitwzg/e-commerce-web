@@ -16,7 +16,8 @@ export default {
     }
     const mufn = () => {
       store.commit('user/setUser', {
-        token: 'zhangs',
+        token:
+          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ7XCJuYW1lXCI6XCJhMWV4XCIsXCJpZFwiOlwiMTM2OTU5NDk1NDczOTg1OTQ1OFwiLFwidXNlcm5hbWVcIjpcInhpYW90dXhpYW4wMDFcIn0iLCJpYXQiOjE2NTUxOTkyMzEsImV4cCI6MTY1NTQ1ODQzMX0.JwrGVchfoDuPRPecX3pX0P9TvfyDvgD0Pcn3Ui6gF48',
       })
     }
     return { fn, mufn }
