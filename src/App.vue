@@ -2,6 +2,8 @@
   <button @click="fn">按钮</button>
   <button @click="mufn">修改token</button>
   <RouterView></RouterView>
+    <!-- 测试 -->
+    <XtxMessage type='success'/>
 </template>
 
 <script>

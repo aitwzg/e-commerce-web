@@ -10,7 +10,7 @@ export const useLazyData = (apiFn) => {
             stop()
             apiFn().then(data => {
                 result.value = data.result
-                console.log(result.value)
+                // console.log(result.value)
             })
         }
     },

@@ -64,7 +64,7 @@ export default {
         loading.value = false
       })
     }
-    // 在更改了二级分类后应该从新加载数据
+    // 在更改了二级分类后应该重新加载数据
     watch(
       () => route.params.id,
       (newVal) => {
@@ -83,6 +83,10 @@ export default {
       // 合并请求参数 保留之前的参数
       reqParams = { ...reqParams, ...sortParams }
       reqParams.page = 1
+      // console.log(goodsList.value)
+      if (goodsList.value.length === 0) {
+        getData()
+      }
       // console.log(reqParams)
       goodsList.value = []
     }
@@ -91,7 +95,6 @@ export default {
       // 合并请求参数 保留之前的参数
       reqParams = { ...reqParams, ...filterParams }
       reqParams.page = 1
-      console.log(reqParams)
       // console.log(reqParams)
       goodsList.value = []
     }

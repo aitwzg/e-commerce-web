@@ -3,7 +3,7 @@ import store from '@/store'
 import router from '@/router'
 
 // 其他地方不用axios需要用基准地址
-export const baseURL = 'https://apipc-xiaotuxian-front.itheima.net/'
+export const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
 
 const instance = axios.create({
     baseURL,
