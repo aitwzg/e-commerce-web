@@ -22,9 +22,9 @@
           <GoodsName :goods="goods" />
           <!-- sku组件 -->
           <GoodsSku :goods="goods" @change="changeSku" />
-          <!-- 测试 skuId="1369155869354233857" -->
+          <!-- 测试 skuId="1369155862131642369" -->
           <XtxNumbox label="数量" v-model="num" :max="goods.inventory" />
-          <XtxButton style="margin-top: 20px" type="primary"
+          <XtxButton @click="insertCart" style="margin-top: 20px" type="primary"
             >加入购物车</XtxButton
           >
         </div>
@@ -61,6 +61,8 @@ import GoodsWarn from './components/goods-warn.vue'
 import { nextTick, ref, watch, provide } from 'vue'
 import { findGoods } from '@/api/product'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import Message from '@/components/library/Message'
 export default {
   name: 'XtxGoodsPage',
   components: {
@@ -83,11 +85,39 @@ export default {
         goods.value.oldPrice = sku.oldPrice
         goods.value.inventory = sku.inventory
       }
+      // 记录sku可能有数据可能没有
+      currSku.value = sku
     }
     // 选择数量
     const num = ref(1)
     provide('goods', goods)
-    return { goods, changeSku, num }
+
+    // 加入购物车
+    const store = useStore()
+    const currSku = ref(null)
+    const insertCart = () => {
+      if (currSku.value && currSku.value.skuId) {
+        const { skuId, specsText: attrsText, inventory: stock } = currSku.value
+        const { id, name, price, mainPictures } = goods.value
+        store.dispatch('cart/insertCart', {
+          skuId,
+          attrsText,
+          stock,
+          id,
+          name,
+          price,
+          nowPrice: price,
+          picture: mainPictures[0],
+          selected: true,
+          isEffective: true,
+          count: num.value,
+        })
+        Message({ type: 'success', text: '添加成功' })
+      } else {
+        Message({ text: '请选择完整规格' })
+      }
+    }
+    return { goods, changeSku, num, insertCart }
   },
 }
 const useGoods = () => {
@@ -99,7 +129,7 @@ const useGoods = () => {
       // 检查路由再本页面才请求数据
       if (newVal && `/product/${newVal}` === route.path) {
         findGoods(route.params.id).then((data) => {
-          // console.log(data)
+          console.log(data)
           // 通过v-if 判断销毁创建组件
           goods.value = null
           // 等待数据生效再执行下一步

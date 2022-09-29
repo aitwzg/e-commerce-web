@@ -4,7 +4,7 @@ import router from '@/router'
 
 // 其他地方不用axios需要用基准地址
 export const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
-
+// export const baseURL = 'https://apipc-xiaotuxian-front.itheima.net/'
 const instance = axios.create({
     baseURL,
     timeout: 5000
@@ -33,7 +33,7 @@ instance.interceptors.response.use(res => res.data, err => {
         // 跳转登录信息 $route.path === /user $route.fullPath ===/user?a=10
         // router.currentRoute 是响应式ref数据要加value,router.currentRoute.value.fullPath
         const fullPath = encodeURIComponent(router.currentRoute.value.fullPath)
-        router.push('/login?redirectUrl' + fullPath)
+        router.push('/login?redirectUrl=' + fullPath)
     }
     return Promise.reject(err)
 })

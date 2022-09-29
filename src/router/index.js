@@ -4,7 +4,9 @@ const Home = () => import('@/views/home')
 const TopCategory = () => import('@/views/category/index')
 const SubCategory = () => import('@/views/category/sub')
 const Goods = () => import('@/views/goods/index')
+const Cart = () => import('@/views/cart/index')
 const Login = () => import('@/views/login/index')
+const LoginCallback = () => import('@/views/login/callback')
 // 路由规则
 const routes = [
   // 一级路由布局容器
@@ -21,13 +23,18 @@ const routes = [
       },
       {
         path: '/product/:id', component: Goods,
-      }
+      },
+      { path: '/cart', component: Cart }
     ]
   },
   {
     path: '/login',
     component: Login
-  }
+  },
+  {
+    path: '/login/callback',
+    component: LoginCallback
+  },
 ]
 
 const router = createRouter({

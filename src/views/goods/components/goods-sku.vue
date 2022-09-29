@@ -31,11 +31,11 @@ const getPathMap = (skus) => {
     if (sku.inventory > 0) {
       // 得到所有大于1的有效库存
       const valueArr = sku.specs.map((val) => val.valueName)
-      //   console.log(valueArr)
+      // console.log(valueArr)
 
       // 用算法得到可选数组的子集
       const valueArrPowerSet = powerSet(valueArr)
-      //   console.log(valueArrPowerSet)
+      // console.log(valueArrPowerSet)
 
       valueArrPowerSet.forEach((arr) => {
         // 拼接每一个子集里面的数组
@@ -47,6 +47,7 @@ const getPathMap = (skus) => {
         } else {
           pathMap[key] = [sku.id]
         }
+        // console.log(pathMap)
       })
     }
   })
@@ -68,6 +69,7 @@ const updateDisabledStatus = (specs, pathMap) => {
   specs.forEach((item, i) => {
     // 获取当前选中的数组
     const selectedValues = getSelectedValues(specs)
+    // console.log(selectedValues)
     item.values.forEach((val) => {
       // 已选中的不做判断
       if (val.selected) return
@@ -85,14 +87,15 @@ const updateDisabledStatus = (specs, pathMap) => {
 // 默认选中
 const initDefaultSelected = (goods, skuId) => {
   // 找出sku信息
-  // 遍历每一个按钮如果按钮之和水库记录的值相等就选择
-  console.log(skuId)
+  // 遍历每一个按钮如果按钮之和sku记录的值相等就选择
+  // console.log(skuId)
   const sku = goods.skus.find((sku) => sku.id === skuId)
-  console.log(sku)
+  // console.log(sku)
   goods.specs.forEach((item, i) => {
     const val = item.values.find((val) => val.name === sku.specs[i].valueName)
     val.selected = true
   })
+  // console.log(goods.specs)
 }
 
 export default {
@@ -109,7 +112,7 @@ export default {
   },
   setup(props, { emit }) {
     const pathMap = getPathMap(props.goods.skus)
-    console.log(pathMap)
+    // console.log(pathMap)
     if (props.skuId) {
       initDefaultSelected(props.goods, props.skuId)
     }
@@ -134,6 +137,7 @@ export default {
       const validSelectedVlues = getSelectedValues(props.goods.specs).filter(
         (v) => v
       )
+      // console.log(validSelectedVlues)
       if (validSelectedVlues.length === props.goods.specs.length) {
         const skuIds = pathMap[validSelectedVlues.join(spliter)]
         console.log(skuIds)

@@ -21,6 +21,7 @@
             <i class="iconfont icon-user"></i>
             <Field
               :class="{ error: errors.account }"
+              v-model="form.account"
               name="account"
               type="text"
               placeholder="请输入用户名或手机号"
@@ -72,7 +73,9 @@
               type="password"
               placeholder="请输入验证码"
             />
-            <span class="code">发送验证码</span>
+            <span @click="send()" class="code">{{
+              time === 0 ? '发送验证码' : `${time}秒后发送`
+            }}</span>
           </div>
           <div v-if="errors.code" class="error">
             <i class="iconfont icon-warning" />{{ errors.code }}
@@ -94,22 +97,36 @@
       <a @click="login()" href="javascript:;" class="btn">登录</a>
     </Form>
     <div class="action">
-      <img
-        src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
-        alt=""
-      />
+      <a
+        href="https://graph.qq.com/oauth2.0/authorize?client_id=100556005&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fwww.corho.com%3A8080%2F%23%2Flogin%2Fcallback"
+      >
+        <img
+          src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
+          alt=""
+      /></a>
+      <!-- <span id="qqLoginBtn"></span> -->
       <div class="url">
-        <a href="javascript:;">忘记密码</a>
+        <a @click="qcheck" href="javascript:;">忘记密码</a>
         <a href="javascript:;">免费注册</a>
       </div>
     </div>
-
   </div>
 </template>
 <script>
-import { reactive, ref, watch } from 'vue'
+import { onUnmounted, reactive, ref, watch } from 'vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validate-schema'
+import Message from '@/components/library/Message'
+import {
+  userAccountLogin,
+  userMobileLoginMsg,
+  userMobileLogin,
+} from '@/api/user'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+import { useIntervalFn } from '@vueuse/core'
+import QC from 'qc'
+
 export default {
   name: 'LoginForm',
   components: {
@@ -117,6 +134,11 @@ export default {
     Field,
   },
   setup() {
+    // 是否qq登录
+    // TODO
+    // const isQqLogin = computed(() => {
+    //   return QC.Login.check()
+    // })
     // 是否短信登录
     const isMsgLogin = ref(false)
     // 表单信息对象
@@ -145,13 +167,124 @@ export default {
       form.code = null
       formCom.value.resetForm()
     })
+
+    const qcheck = () => {
+      console.log(QC.Login.check())
+    }
+    // 和vue2.0的使用方式一样
+    // const { proxy } = getCurrentInstance()
+    const store = useStore()
+    const route = useRoute()
+    const router = useRouter()
     const login = () => {
       // form 组件提供了一个validate函数作为表达校验，返回的是promise
       formCom.value.validate().then((valid) => {
         console.log(valid)
+        // Message({ type: 'error', text: '用户名或者密码错误' })
+        // proxy.$message({ text: '111' })
+        if (valid) {
+          if (isMsgLogin.value) {
+            // 短信登录
+            // const { mobile, code } = form
+            userMobileLogin(form)
+              .then((data) => {
+                const { id, account, avatar, mobile, nickname, token } =
+                  data.result
+                store.commit('user/setUser', {
+                  id,
+                  account,
+                  avatar,
+                  mobile,
+                  nickname,
+                  token,
+                })
+                router.push(route.query.redirectUrl || '/')
+                Message({ type: 'success', text: '登录成功' })
+              })
+              .catch((e) => {
+                if (e.response.data) {
+                  Message({
+                    type: 'error',
+                    text: e.response.data.message || '登录失败',
+                  })
+                }
+              })
+          } else {
+            // 账号登录
+
+            userAccountLogin(form)
+              .then((data) => {
+                const { id, account, avatar, mobile, nickname, token } =
+                  data.result
+                store.commit('user/setUser', {
+                  id,
+                  account,
+                  avatar,
+                  mobile,
+                  nickname,
+                  token,
+                })
+                router.push(route.query.redirectUrl || '/')
+                Message({ type: 'success', text: '登录成功' })
+              })
+              .catch((e) => {
+                if (e.response.data) {
+                  Message({
+                    type: 'error',
+                    text: e.response.data.message || '登录失败',
+                  })
+                }
+              })
+          }
+        }
       })
     }
-    return { isMsgLogin, form, schema: mySchema, formCom, login }
+    const time = ref(0)
+    const { pause, resume } = useIntervalFn(
+      () => {
+        time.value--
+        console.log(time.value)
+        if (time.value <= 0) {
+          pause()
+        }
+      },
+      1000,
+      { immediate: false }
+    )
+    onUnmounted(() => {
+      pause()
+    })
+
+    const send = () => {
+      const valid = mySchema.mobile(form.mobile)
+      if (valid === true) {
+        if (time.value === 0) {
+          console.log('a')
+          userMobileLoginMsg(form.mobile).then((data) => {
+            Message({ type: 'success', text: '发送成功' })
+            time.value = 60
+            resume()
+          })
+        }
+      } else {
+        formCom.value.setFieldError('mobile', valid)
+        console.log('b')
+      }
+    }
+    // onMounted(() => {
+    //   // 获取路径 现在不需要
+    //   QC.Login({ btnId: 'qqLoginBtn' })
+    // })
+    return {
+      isMsgLogin,
+      form,
+      schema: mySchema,
+      formCom,
+      login,
+      send,
+      time,
+      qcheck,
+    }
   },
 }
 </script>
@@ -162,20 +295,26 @@ export default {
   .toggle {
     padding: 15px 40px;
     text-align: right;
+
     a {
       color: @xtxColor;
+
       i {
         font-size: 14px;
       }
     }
   }
+
   .form {
     padding: 0 40px;
+
     &-item {
       margin-bottom: 28px;
+
       .input {
         position: relative;
         height: 36px;
+
         > i {
           width: 34px;
           height: 34px;
@@ -188,20 +327,24 @@ export default {
           line-height: 34px;
           font-size: 18px;
         }
+
         input {
           padding-left: 44px;
           border: 1px solid #cfcdcd;
           height: 36px;
           line-height: 36px;
           width: 100%;
+
           &.error {
             border-color: @priceColor;
           }
+
           &.active,
           &:focus {
             border-color: @xtxColor;
           }
         }
+
         .code {
           position: absolute;
           right: 1px;
@@ -216,22 +359,26 @@ export default {
           cursor: pointer;
         }
       }
+
       > .error {
         position: absolute;
         font-size: 12px;
         line-height: 28px;
         color: @priceColor;
+
         i {
           font-size: 14px;
           margin-right: 2px;
         }
       }
     }
+
     .agree {
       a {
         color: #069;
       }
     }
+
     .btn {
       display: block;
       width: 100%;
@@ -240,16 +387,19 @@ export default {
       text-align: center;
       line-height: 40px;
       background: @xtxColor;
+
       &.disabled {
         background: #cfcdcd;
       }
     }
   }
+
   .action {
     padding: 20px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .url {
       a {
         color: #999;

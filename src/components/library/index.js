@@ -4,6 +4,8 @@
 // import XtxBread from './xtx-bread'
 // import XtxBreadItem from './xtx-bread-item'
 import defaultImg from '@/assets/images/200.png'
+import Message from './Message'
+import Confirm from './confirm'
 
 // 导入library文件夹下的所有组件
 // 批量导入需要使用一个函数 require.context(dir,deep,matching)
@@ -21,7 +23,12 @@ export default {
             const component = importFn(key).default
             app.component(component.name, component)
         })
+        // 定义指令
         defineDirective(app)
+        // 定义一个原型函数
+        // 和vue2.0的使用方式一样
+        app.config.globalProperties.$message = Message
+        app.config.globalProperties.$confirm = Confirm
     }
 
 }

@@ -20,6 +20,6 @@ module.exports = {
     'space-in-parens': 0,
     'func-call-spacing': 0,
     'vue/multi-word-component-names': 0,
-
+    'prefer-const': 0
   }
 }

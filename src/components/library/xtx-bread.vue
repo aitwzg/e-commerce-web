@@ -8,6 +8,7 @@ export default {
     const dynamicItems = []
     items.forEach((item, i) => {
       dynamicItems.push(item)
+      console.log(item)
       if (i < items.length - 1) {
         dynamicItems.push(h('i', { class: 'iconfont icon-angle-right' }))
       }
