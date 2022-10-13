@@ -17,10 +17,10 @@
         <h3>全部分类</h3>
         <ul>
           <li v-for="item in TopCategory.children" :key="item.id">
-            <a href="javascript:;">
+            <RouterLink :to="`/category/sub/${item.id}`">
               <img :src="item.picture" />
               <p>{{ item.name }}</p>
-            </a>
+            </RouterLink>
           </li>
         </ul>
       </div>

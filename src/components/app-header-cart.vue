@@ -61,7 +61,6 @@ export default {
     const deleteCart = (skuId) => {
       Confirm({ text: '亲，您是否确认删除商品' })
         .then(() => {
-          console.log('确认')
           store
             .dispatch('cart/deleteCart', skuId)
             .then(() => {
@@ -72,7 +71,6 @@ export default {
             })
         })
         .catch((e) => {
-          console.log('取消')
         })
     }
 

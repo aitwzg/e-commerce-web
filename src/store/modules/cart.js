@@ -64,11 +64,12 @@ export default {
         updateCart(state, goods) {
             // goods中字段有可能不完整，goods有的信息才去修改。
             // 1. goods中必需又skuId，才能找到对应的商品信息
-            console.log(goods)
+            // console.log(goods)
             const updateGoods = state.list.find(item => item.skuId === goods.skuId)
-            console.log(updateGoods)
+            // console.log(updateGoods)
             for (const key in goods) {
                 if (goods[key] !== null && goods[key] !== undefined && goods[key] !== '') {
+                    // console.log(goods[key], updateGoods[key])
                     updateGoods[key] = goods[key]
                 }
             }
@@ -80,6 +81,24 @@ export default {
         }
     },
     actions: {
+        // 修改规格
+        updateCartSku(ctx, { oldSkuId, newSku }) {
+            return new Promise((resolve, reject) => {
+                if (ctx.rootState.user.profile.token) {
+                    // 已登录
+                } else {
+                    // 未登录
+                    // 找出旧的商品信息
+                    const oldGoods = ctx.state.list.find(item => item.skuId === oldSkuId)
+                    // 删除原数据
+                    ctx.commit('deleteCart', oldSkuId)
+                    const { skuId, price: nowPrice, specsText: attrsText, inventory: stock } = newSku
+                    const newGoods = { ...oldGoods, skuId, nowPrice, attrsText, stock }
+                    ctx.commit('insertCart', newGoods)
+                    resolve()
+                }
+            })
+        },
         insertCart(ctx, payload) {
             return new Promise((resolve, reject) => {
                 if (ctx.rootState.user.profile.token) {
@@ -107,7 +126,7 @@ export default {
                         return getNewCartGoods(item.skuId)
                     })
                     Promise.all(promiseArr).then(dataArr => {
-                        // console.log(dataArr)
+                        console.log(dataArr)
                         dataArr.forEach((data, i) => {
                             ctx.commit('updateCart', { skuId: ctx.state.list[i].skuId, ...data.result })
                         })
@@ -149,6 +168,21 @@ export default {
                     // 登录 TODO
                 } else {
                     ctx.commit('deleteCart', skuId)
+                    resolve()
+                }
+            })
+        },
+        // 批量删除选择商品
+        batchDeleteCart(ctx, isClear) {
+            return new Promise((resolve, reject) => {
+                if (ctx.rootState.user.profile.token) {
+                    // 登录 TODO
+                } else {
+                    // 本地
+                    // 获取选中商品列表，进行遍历调用，deleteCart mutations 函数
+                    ctx.getters[isClear ? 'invalidList' : 'selectedList'].forEach(item => {
+                        ctx.commit('deleteCart', item.skuId)
+                    })
                     resolve()
                 }
             })
