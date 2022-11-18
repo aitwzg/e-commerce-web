@@ -77,9 +77,11 @@ export default {
               nickname,
               token,
             })
-            // 跳转页面
-            router.push(store.state.user.redirectUrl)
-            Message({ type: 'success', text: 'QQ登录成功' })
+            store.dispatch('cart/mergeCart').then(() => {
+              // 跳转页面
+              router.push(store.state.user.redirectUrl)
+              Message({ type: 'success', text: 'QQ登录成功' })
+            })
           })
           .catch((e) => {
             // 登录失败：没有绑定

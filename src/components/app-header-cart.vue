@@ -54,7 +54,7 @@ export default {
   name: 'AppHeaderCart',
   setup() {
     const store = useStore()
-    store.dispatch('cart/findCartList').then(() => {
+    store.dispatch('cart/findCart').then(() => {
       Message({ type: 'success', text: '更新本地购物车成功' })
     })
     // 删除

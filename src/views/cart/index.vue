@@ -77,7 +77,10 @@
               <td class="tc">
                 <p class="f16 red">
                   &yen;{{
-                    (Math.round(goods.nowPrice * 100) / 100) * goods.count
+                    (
+                      (Math.round(goods.nowPrice * 100) / 100) *
+                      goods.count
+                    ).toFixed(2)
                   }}
                 </p>
               </td>
@@ -125,7 +128,10 @@
               <td class="tc">
                 <p>
                   &yen;{{
-                    (Math.round(goods.nowPrice * 100) / 100) * goods.count
+                    (
+                      (Math.round(goods.nowPrice * 100) / 100) *
+                      goods.count
+                    ).toFixed(2)
                   }}
                 </p>
               </td>

@@ -198,8 +198,10 @@ export default {
                   nickname,
                   token,
                 })
-                router.push(route.query.redirectUrl || '/')
-                Message({ type: 'success', text: '登录成功' })
+                store.dispatch('cart/mergeCart').then(() => {
+                  router.push(route.query.redirectUrl || '/')
+                  Message({ type: 'success', text: '登录成功' })
+                })
               })
               .catch((e) => {
                 if (e.response.data) {
@@ -214,6 +216,7 @@ export default {
 
             userAccountLogin(form)
               .then((data) => {
+                // 储存用户信息
                 const { id, account, avatar, mobile, nickname, token } =
                   data.result
                 store.commit('user/setUser', {
@@ -224,8 +227,10 @@ export default {
                   nickname,
                   token,
                 })
-                router.push(route.query.redirectUrl || '/')
-                Message({ type: 'success', text: '登录成功' })
+                store.dispatch('cart/mergeCart').then(() => {
+                  router.push(route.query.redirectUrl || '/')
+                  Message({ type: 'success', text: '登录成功' })
+                })
               })
               .catch((e) => {
                 if (e.response.data) {
@@ -239,6 +244,9 @@ export default {
         }
       })
     }
+
+    // pause 暂停 resume 开始
+    // useIntervalFn(回调函数, 执行间隔, 是否立即开启)
     const time = ref(0)
     const { pause, resume } = useIntervalFn(
       () => {

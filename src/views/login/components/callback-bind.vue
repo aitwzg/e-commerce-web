@@ -139,8 +139,10 @@ export default {
               nickname,
               token,
             })
-            router.push(store.state.user.redirectUrl || '/')
-            Message({ type: 'success', text: '绑定成功' })
+            store.dispatch('cart/mergeCart').then(() => {
+              router.push(store.state.user.redirectUrl || '/')
+              Message({ type: 'success', text: '绑定成功' })
+            })
           })
           .catch((e) => {
             Message({ type: 'error', text: '绑定失败' })
