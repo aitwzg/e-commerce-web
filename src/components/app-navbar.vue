@@ -5,7 +5,10 @@
         <template v-if="profile.token">
           <li>
             <a href="javascript:;"
-              ><i class="iconfont icon-user"></i>{{ profile.nickname }}</a
+              ><i class="iconfont icon-user"></i
+              >{{
+                profile.nickname == null ? profile.account : profile.nickname
+              }}</a
             >
           </li>
           <li><a href="javascript:;" @click="logout()">退出登录</a></li>

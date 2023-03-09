@@ -2,7 +2,7 @@
   <div class="xtx-city" ref="target">
     <div class="select" @click="toggleDialog" :class="{ active }">
       <!-- active:active省略写法 -->
-      <span v-if="!fullLocation" class="placeholder">请选择配送地址</span>
+      <span v-if="!fullLocation" class="placeholder">{{ placeholder }}</span>
       <span v-else class="value">{{ fullLocation }}</span>
       <i class="iconfont icon-angle-down"></i>
     </div>
@@ -30,6 +30,10 @@ export default {
     fullLocation: {
       type: String,
       default: '',
+    },
+    placeholder: {
+      type: String,
+      default: '请选择配送地址',
     },
   },
   setup(props, { emit }) {

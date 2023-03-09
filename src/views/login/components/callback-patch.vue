@@ -197,7 +197,7 @@ export default {
             })
           })
           .catch((e) => {
-            Message({ type: 'error', text: '绑定失败' })
+            Message({ type: 'error', text: '信息完善成功' })
           })
       }
     }

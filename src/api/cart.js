@@ -56,7 +56,7 @@ export const deleteCart = (ids) => {
   return request('/member/cart', 'delete', { ids })
 }
 /**
- *
+ * 修改购物车商品（状态，数量）
  * @param {String>} object.skuId - SKUID
  * @param {Boolean} selected - 选中状态
  * @param {Integer} count - 数量
