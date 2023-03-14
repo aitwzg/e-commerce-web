@@ -4,11 +4,11 @@
       <ul>
         <template v-if="profile.token">
           <li>
-            <a href="javascript:;"
+            <RouterLink to="/member"
               ><i class="iconfont icon-user"></i
               >{{
                 profile.nickname == null ? profile.account : profile.nickname
-              }}</a
+              }}</RouterLink
             >
           </li>
           <li><a href="javascript:;" @click="logout()">退出登录</a></li>
