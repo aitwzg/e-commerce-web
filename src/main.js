@@ -9,6 +9,8 @@ import UI from '@/components/library'
 import 'normalize.css'
 
 import '@/assets/styles/common.less'
+// mockjs
+import '@/mock'
 
 // 自己的公共样式
 // 全局使用
