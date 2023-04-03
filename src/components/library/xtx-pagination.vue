@@ -57,7 +57,7 @@ export default {
       myPageSize.value = props.pageSize
       myCurrentPage.value = props.currentPage
       console.log(myCurrentPage.value)
-    })
+    }, { immediate: true })
 
     const pager = computed(() => {
       // 计算总数页

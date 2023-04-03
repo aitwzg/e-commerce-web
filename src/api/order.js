@@ -31,6 +31,24 @@ export const editAddress = (form) => {
 export const submitOrder = (params) => {
     return request('/member/order', 'post', params)
 }
+
+/**
+ * 结算页面-提交订单
+ * @param {Sting} orderId 订单ID
+ * @returns
+ */
 export const findOrderDetail = (orderId) => {
     return request('/member/order/' + orderId, 'get')
+}
+
+/**
+ * 结算页面-提交订单
+ * @param {Sting} page 页码
+ * @param {Sting} pageSize 每页条数
+ * @param {Sting} orderState 订单状态 1为待付款、2为待发货、3为待收货、4为待评价、5为已完成、6为已取消，未传该参数或0为全部
+ * @returns
+ */
+
+export const findOrderList = ({ page = 1, pageSize = 10, orderState = 0 }) => {
+    return request('/member/order', 'get', { page, pageSize, orderState })
 }

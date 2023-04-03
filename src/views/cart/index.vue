@@ -187,6 +187,10 @@ export default {
   components: { GoodRelevant, CartNone, CartSku },
   setup() {
     const store = useStore()
+    // 打开购物车就更新
+    store.dispatch('cart/findCart').then(() => {
+      Message({ type: 'success', text: '更新本地购物车成功' })
+    })
     // 单选
     const checkOne = (skuId, selected) => {
       store.dispatch('cart/updateCart', {
