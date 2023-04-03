@@ -38,7 +38,6 @@ import { orderStatus } from '@/api/constants'
 import { ref, reactive, watch } from 'vue'
 import OrderItem from './components/order-item'
 import { findOrderList } from '@/api/order'
-// 测试git
 export default {
   name: 'MemberOrder',
   components: {
