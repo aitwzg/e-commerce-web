@@ -1,15 +1,23 @@
 <template>
   <div class="order-item">
     <div class="head">
-      <span>下单时间：{{ order.creatTime }}</span>
+      <XtxCheckbox
+        @change="($event) => $emit('checkOne', $event, order.id)"
+        :modelValue="order.selected"
+      />
+      <span>下单时间：{{ order.createTime }}</span>
       <span>订单编号：{{ order.id }}</span>
       <span class="down-time" v-if="order.orderState === 1">
         <i class="iconfont icon-down-time"></i>
         <b>付款截止：{{ timeText }}</b>
       </span>
-      <p>
-        <a href="javascript:;" v-if="[5, 6].includes(order.orderState)">删除</a>
-      </p>
+
+      <a
+        @click="$emit('on-delete', order)"
+        href="javascript:;"
+        class="del"
+        >删除</a
+      >
     </div>
     <div class="body">
       <div class="column goods">
@@ -68,8 +76,15 @@
         <XtxButton v-if="order.orderState === 3" type="primary" size="small"
           >确认收货</XtxButton
         >
-        <p><a href="javascript:;">查看详情</a></p>
-        <p><a v-if="order.orderState === 1" href="javascript:;">取消订单</a></p>
+        <p><RouterLink :to="`/member/${order.id}`">查看详情</RouterLink></p>
+        <p>
+          <a
+            @click="$emit('on-cancel', order)"
+            v-if="order.orderState === 1"
+            href="javascript:;"
+            >取消订单</a
+          >
+        </p>
         <p>
           <a v-if="[2, 3, 4, 5].includes(order.orderState)" href="javascript:;"
             >再次购买</a
@@ -97,6 +112,7 @@ export default {
       default: () => ({}),
     },
   },
+  emits: ['on-cancel', 'on-delete'],
   setup(props) {
     const { start, timeText } = usePayTime()
     start(props.order.countdown)

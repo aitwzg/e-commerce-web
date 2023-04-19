@@ -42,11 +42,10 @@
 import { findOrderDetail } from '@/api/order'
 import { useRoute } from 'vue-router'
 import { ref } from 'vue'
+
 export default {
   name: 'XtxPayResultPage',
   setup() {
-    console.log('加载成功')
-
     const route = useRoute()
     const order = ref(null)
     console.log('加载成功')

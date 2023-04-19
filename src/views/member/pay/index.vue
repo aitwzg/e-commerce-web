@@ -51,9 +51,7 @@
         <img src="@/assets/images/load.gif" alt="" />
         <div v-if="order">
           <p>如果支付成功：</p>
-          <RouterLink :to="`/member/order/${id}`"
-            >查看订单详情></RouterLink
-          >
+          <RouterLink :to="`/member/order/${id}`">查看订单详情></RouterLink>
           <p>如果支付失败：</p>
           <RouterLink to="/">查看相关疑问></RouterLink>
         </div>
@@ -67,9 +65,16 @@ import { useRoute } from 'vue-router'
 import { findOrderDetail } from '@/api/order'
 import { usePayTime } from '@/hooks'
 import { baseURL } from '@/utils/request'
+import { useStore } from 'vuex'
+import Message from '@/components/library/Message'
 export default {
   name: 'XtxPayPage',
   setup() {
+    const store = useStore()
+    // 购物车更新
+    store.dispatch('cart/findCart').then(() => {
+      Message({ type: 'success', text: '更新本地购物车成功' })
+    })
     // 根据地址栏ID发送请求获取订单数据
     const route = useRoute()
     const order = ref(null)

@@ -15,7 +15,24 @@
     <div class="order-list">
       <div v-if="loading" class="loading"></div>
       <div class="none" v-if="!loading && orderList.length == 0">暂未数据</div>
+      <XtxCheckbox
+        v-if="orderList.length > 0"
+        :modelValue="selectedAll"
+        @change="checkAll"
+      >
+        全选</XtxCheckbox
+      >
+      <a
+        v-if="orderList.length > 0"
+        @click="deleteSelectedCheck"
+        href="javascript:;"
+        class="del"
+        >删除</a
+      >
       <OrderItem
+        @on-cancel="handlerCancel"
+        @on-delete="handlerDelete"
+        @checkOne="handlercheckOne"
         v-for="item in orderList"
         :key="item.id"
         :order="item"
@@ -30,6 +47,8 @@
       @current-change="reqParams.page = $event"
     >
     </XtxPagination>
+    <!-- 取消原因组件 -->
+    <OrderCancel ref="OrderCancelCom"></OrderCancel>
   </div>
 </template>
 
@@ -37,15 +56,22 @@
 import { orderStatus } from '@/api/constants'
 import { ref, reactive, watch } from 'vue'
 import OrderItem from './components/order-item'
-import { findOrderList } from '@/api/order'
+import { findOrderList, deleteOrder } from '@/api/order'
+import OrderCancel from './components/order-cancel'
+import Confirm from '@/components/library/confirm'
+import Message from '@/components/library/Message'
+// import { useStore } from 'vuex'
 export default {
   name: 'MemberOrder',
   components: {
     OrderItem,
+    OrderCancel,
   },
   setup() {
     const activeName = ref('all')
-
+    // 全选的数据
+    const selectedAll = ref(false)
+    // const store = useStore()
     // 获取数据
     const reqParams = reactive({
       page: 1,
@@ -60,20 +86,64 @@ export default {
       reqParams.orderState = index
       console.log(name, index)
     }
+    const getOrderList = () => {
+      loading.value = true
+      findOrderList(reqParams).then((data) => {
+        orderList.value = data.result.items
+        loading.value = false
+        total.value = data.result.counts
+        // console.log(total.value)
+      })
+    }
     // 只要筛选条件发生变化就能重新请求
     watch(
       reqParams,
       () => {
-        loading.value = true
-        findOrderList(reqParams).then((data) => {
-          orderList.value = data.result.items
-          loading.value = false
-          total.value = data.result.counts
-          console.log(total.value)
-        })
+        getOrderList()
       },
       { immediate: true }
     )
+
+    // 删除订单
+    const handlerDelete = (order) => {
+      Confirm({ text: '亲，您确认删除该订单吗？' })
+        .then(() => {
+          deleteOrder([order.id]).then(() => {
+            // console.log('删除成功')
+            Message({ type: 'success', text: '删除成功' })
+            getOrderList()
+          })
+        })
+        .catch(() => {})
+    }
+    // 删除选中订单
+    const deleteSelectedCheck = () => {
+      let selectedCheck = orderList.value
+        .filter((item) => item.selected === true)
+        .map((item) => item.id)
+      Confirm({ text: '亲，您确认删除选中订单吗？' })
+        .then(() => {
+          deleteOrder(selectedCheck).then(() => {
+            // console.log('删除成功')
+            Message({ type: 'success', text: '删除成功' })
+            getOrderList()
+          })
+        })
+        .catch(() => {})
+    }
+    // 选中订单
+    const handlercheckOne = (event, id) => {
+      // console.log(orderList.value.find((item) => item.id === id))
+      orderList.value.find((item) => item.id === id).selected = event
+    }
+    // 全选订单
+    const checkAll = (event) => {
+      selectedAll.value = event
+      orderList.value.map((item) => {
+        item.selected = event
+        return item
+      })
+    }
     return {
       activeName,
       clickTab,
@@ -82,8 +152,24 @@ export default {
       loading,
       total,
       reqParams,
+      handlerDelete,
+      handlercheckOne,
+      selectedAll,
+      checkAll,
+      deleteSelectedCheck,
+      ...useCancel(), // 必须加括号
     }
   },
+}
+
+// 取消订单逻辑
+const useCancel = () => {
+  // 组件实例
+  const OrderCancelCom = ref(null)
+  const handlerCancel = (order) => {
+    OrderCancelCom.value.open(order)
+  }
+  return { handlerCancel, OrderCancelCom }
 }
 </script>
 
@@ -98,6 +184,9 @@ export default {
   padding: 20px;
   position: relative;
   min-height: 400px;
+  .del {
+    float: right;
+  }
 }
 .loading {
   height: 100%;
