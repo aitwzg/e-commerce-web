@@ -135,6 +135,11 @@ export default {
     const handlercheckOne = (event, id) => {
       // console.log(orderList.value.find((item) => item.id === id))
       orderList.value.find((item) => item.id === id).selected = event
+      if (orderList.value.find((item) => item.selected !== true)) {
+        selectedAll.value = false
+      } else {
+        selectedAll.value = true
+      }
     }
     // 全选订单
     const checkAll = (event) => {
