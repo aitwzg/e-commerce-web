@@ -135,6 +135,7 @@ export default {
     const handlercheckOne = (event, id) => {
       // console.log(orderList.value.find((item) => item.id === id))
       orderList.value.find((item) => item.id === id).selected = event
+      // 单选控制全选
       if (orderList.value.find((item) => item.selected !== true)) {
         selectedAll.value = false
       } else {
