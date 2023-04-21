@@ -68,6 +68,25 @@ export const cancelOrder = ({ orderId, cancelReason }) => {
  * @param {Sting} orderId 订单ID
  * @returns
  */
-export const deleteOrder = ( orderId ) => {
+export const deleteOrder = (orderId) => {
     return request('/member/order', 'delete', { ids: orderId })
+}
+
+/**
+ * 确认收货
+ * @param {Sting} orderId 订单ID
+ * @returns
+ */
+
+export const confirmOrder = (orderId) => {
+    return request(`/member/order/${orderId}/receipt`, 'put')
+}
+
+/**
+ * 查询物流
+ * @param {Sting} orderId 订单ID
+ * @returns
+ */
+export const logisticsOrder = (orderId) => {
+    return request(`/member/order/${orderId}/logistics`, 'get')
 }

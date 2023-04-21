@@ -12,10 +12,7 @@
         <b>付款截止：{{ timeText }}</b>
       </span>
 
-      <a
-        @click="$emit('on-delete', order)"
-        href="javascript:;"
-        class="del"
+      <a @click="$emit('on-delete', order)" href="javascript:;" class="del"
         >删除</a
       >
     </div>
@@ -44,7 +41,7 @@
         <!-- 待收货 查看物流 -->
         <!-- 待评价 评价商品 -->
         <!-- 已完成 查看评价 -->
-        <p v-if="order.orderState === 3">
+        <p @click="$emit('on-logistics', order)" v-if="order.orderState === 3">
           <a class="green" href="javascript:;">查看物流</a>
         </p>
         <p v-if="order.orderState === 4">
@@ -73,7 +70,11 @@
           size="small"
           >立即付款</XtxButton
         >
-        <XtxButton v-if="order.orderState === 3" type="primary" size="small"
+        <XtxButton
+          @click="$emit('on-confirm', order)"
+          v-if="order.orderState === 3"
+          type="primary"
+          size="small"
           >确认收货</XtxButton
         >
         <p><RouterLink :to="`/member/${order.id}`">查看详情</RouterLink></p>
@@ -112,7 +113,7 @@ export default {
       default: () => ({}),
     },
   },
-  emits: ['on-cancel', 'on-delete'],
+  emits: ['on-cancel', 'on-delete', 'checkOne', 'on-confirm', 'on-logistics'],
   setup(props) {
     const { start, timeText } = usePayTime()
     start(props.order.countdown)

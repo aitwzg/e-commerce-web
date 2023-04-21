@@ -33,6 +33,8 @@
         @on-cancel="handlerCancel"
         @on-delete="handlerDelete"
         @checkOne="handlercheckOne"
+        @on-confirm="handlerConfirm"
+        @on-logistics="handlerLogistics"
         v-for="item in orderList"
         :key="item.id"
         :order="item"
@@ -49,6 +51,8 @@
     </XtxPagination>
     <!-- 取消原因组件 -->
     <OrderCancel ref="OrderCancelCom"></OrderCancel>
+    <!-- 查看物流组件 -->
+    <OrderLogistics ref="OrderLogistcsCom"></OrderLogistics>
   </div>
 </template>
 
@@ -56,16 +60,18 @@
 import { orderStatus } from '@/api/constants'
 import { ref, reactive, watch } from 'vue'
 import OrderItem from './components/order-item'
-import { findOrderList, deleteOrder } from '@/api/order'
+import { findOrderList, deleteOrder, confirmOrder } from '@/api/order'
 import OrderCancel from './components/order-cancel'
 import Confirm from '@/components/library/confirm'
 import Message from '@/components/library/Message'
+import OrderLogistics from './components/order-logistics'
 // import { useStore } from 'vuex'
 export default {
   name: 'MemberOrder',
   components: {
     OrderItem,
     OrderCancel,
+    OrderLogistics,
   },
   setup() {
     const activeName = ref('all')
@@ -150,6 +156,23 @@ export default {
         return item
       })
     }
+    // 确认收货
+    const handlerConfirm = (order) => {
+      Confirm({ text: '亲，您确认收货吗？' })
+        .then(() => {
+          confirmOrder(order.id).then(() => {
+            Message({ type: 'success', text: '确认收货成功' })
+            // 待收货--->待评价
+            order.orderState = 4
+          })
+        })
+        .catch(() => {})
+    }
+    // 物流查询
+    const OrderLogistcsCom = ref(null)
+    const handlerLogistics = (order) => {
+      OrderLogistcsCom.value.open(order)
+    }
     return {
       activeName,
       clickTab,
@@ -164,6 +187,9 @@ export default {
       checkAll,
       deleteSelectedCheck,
       ...useCancel(), // 必须加括号
+      handlerConfirm,
+      handlerLogistics,
+      OrderLogistcsCom,
     }
   },
 }
