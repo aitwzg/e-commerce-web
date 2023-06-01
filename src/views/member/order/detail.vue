@@ -1,5 +1,11 @@
 <template>
-  <div class="member-order">MemberDetail</div>
+  <div class="member-order">
+    <!-- 头部 -->
+    <!-- 进度 -->
+    <!-- 信息 -->
+
+  </div>
+
 </template>
 
 <script>
@@ -8,5 +14,5 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="less">
 </style>
